@@ -50,7 +50,14 @@ int StringParserClass::getDataBetweenTags(char *pDataToSearchThru, std::vector<s
 	if(pDataToSearchThru == NULL){
 		return ERROR_DATA_NULL;
 	}
-	for(int i = 0; i < strlen(pDataToSearchThru); i++){
+	if(pStartTag == NULL || pEndTag == NULL){
+		return ERROR_TAGS_NULL;
+	}
+	int dataLen = strlen(pDataToSearchThru);
+	for(int i = 0; i < dataLen; i++){
+		if(pDataToSearchThru[i] == *pStartTag){
+			//findTag(*pStartTag, *pStartTag, *pStartTag);
+		}
 	}
 	return SUCCESS;
 }
