@@ -69,9 +69,22 @@ int StringParserClass::getDataBetweenTags(char *pDataToSearchThru, std::vector<s
 		if(result != FAIL){
 			string str = "";
 			int i = 1;
-			while (*(endOp + i) != *tStarCl){
-
-				str += *(endOp + i);
+			bool end = false;
+			while(!end){
+				if(*(endOp + i) == *tStarCl){
+					int j = 0;
+					while(*(endOp + i + j) != *endCl){
+						if(*(endOp + i + j) != *(tStarCl + j)){
+							end = false;
+							break;
+						}
+						end = true;
+						j++;
+					}
+				}
+				if(end != true){
+					str += *(endOp + i);
+				}
 				i++;
 			}
 			myVector.push_back(str);
