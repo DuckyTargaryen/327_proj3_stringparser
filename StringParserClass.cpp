@@ -47,16 +47,32 @@ int StringParserClass::setTags(const char *pStart, const char *pEnd){
 //ERROR_DATA_NULL pDataToSearchThru is null
 int StringParserClass::getDataBetweenTags(char *pDataToSearchThru, std::vector<std::string> &myVector){
 	myVector.clear();
-	if(pDataToSearchThru == NULL){
-		return ERROR_DATA_NULL;
-	}
 	if(pStartTag == NULL || pEndTag == NULL){
 		return ERROR_TAGS_NULL;
 	}
-	int dataLen = strlen(pDataToSearchThru);
-	for(int i = 0; i < dataLen; i++){
-		if(pDataToSearchThru[i] == *pStartTag){
-			//findTag(*pStartTag, *pStartTag, *pStartTag);
+	if(pDataToSearchThru == NULL){
+		return ERROR_DATA_NULL;
+	}
+	int result = SUCCESS;
+	char* endOp = pDataToSearchThru;
+	char* endCl = pDataToSearchThru;
+	while(result == SUCCESS){
+		char* tStarOp = endOp;
+		result = findTag(pStartTag, tStarOp, endOp);
+		if(result == ERROR_TAGS_NULL){
+			return ERROR_TAGS_NULL;
+		}
+		char* tStarCl = endCl;
+		result = findTag(pEndTag, tStarCl, endCl);
+		if(result != FAIL){
+			string str = "";
+			int i = 1;
+			while (*(endOp + i) != *tStarCl){
+
+				str += *(endOp + i);
+				i++;
+			}
+			myVector.push_back(str);
 		}
 	}
 	return SUCCESS;
@@ -69,20 +85,33 @@ void StringParserClass::cleanup(){
 		delete[] pEndTag;
 }
 
+
 //Searches a string starting at pStart for pTagToLookFor
 //returns:
 //SUCCESS  found pTagToLookFor, pStart points to beginning of tag and pEnd points to end of tag
 //FAIL did not find pTagToLookFor and pEnd points to 0
 //ERROR_TAGS_NULL if either pStart or pEnd is null
-int findTag(char *pTagToLookFor, char *&pStart, char *&pEnd){
+int StringParserClass::findTag(char *pTagToLookFor, char *&pStart, char *&pEnd){
 	if(pStart == NULL || pEnd == NULL){
 		return ERROR_TAGS_NULL;
 	}
-	//cout << *pStart << endl;
-
-	return 0;
+	int dataLen = strlen(pStart);
+	for(int i = 0; i < dataLen; i++){
+		if(*pTagToLookFor == *(pStart + i)){
+			int k = 0;
+			while(*(pTagToLookFor + k) == *(pStart + i + k)){
+				if (*(pTagToLookFor + k) == '>'){
+					pStart = (pStart + i);
+					pEnd = (pEnd + k + i);
+					return SUCCESS;
+				}
+				k++;
+			}
+		}
+	}
+	pEnd = 0;
+	return FAIL;
 }
-
 
 
 
