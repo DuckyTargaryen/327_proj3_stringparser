@@ -63,7 +63,9 @@ int StringParserClass::getDataBetweenTags(char *pDataToSearchThru, std::vector<s
 			return ERROR_TAGS_NULL;
 		}
 		char* tStarCl = endCl;
-		result = findTag(pEndTag, tStarCl, endCl);
+		if(result != FAIL){
+			result = findTag(pEndTag, tStarCl, endCl);
+		}
 		if(result != FAIL){
 			string str = "";
 			int i = 1;
